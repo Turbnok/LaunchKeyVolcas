@@ -1,0 +1,60 @@
+[editor]
+line_wrapping=false
+line_break_column=72
+auto_continue_multiline=true
+
+[file_prefs]
+final_new_line=true
+ensure_convert_new_lines=false
+strip_trailing_spaces=false
+replace_tabs=false
+
+[indentation]
+indent_width=4
+indent_type=1
+indent_hard_tab_width=8
+detect_indent=false
+detect_indent_width=false
+indent_mode=2
+
+[project]
+name=Launchkey
+base_path=/home/viande/Workspace/LaunchkeyMiniMK3
+description=
+file_patterns=
+
+[long line marker]
+long_line_behaviour=1
+long_line_column=72
+
+[files]
+current_page=3
+FILE_NAME_0=6547;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2Fapplication.cpp;0;4
+FILE_NAME_1=141;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fmain.cpp;0;4
+FILE_NAME_2=1479;Markdown;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2FREADME.md;0;4
+FILE_NAME_3=842;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2Fmidi.hpp;0;4
+FILE_NAME_4=359;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2Fmidi.cpp;0;4
+FILE_NAME_5=762;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2Fapplication.hpp;0;4
+
+[VTE]
+last_dir=/home/viande/Workspace/LaunchkeyMiniMK3/src
+
+[prjorg]
+source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;*.m;
+header_patterns=*.h;*.H;*.hpp;*.hxx;*.h++;*.hh;
+ignored_dirs_patterns=.*;CVS;
+ignored_file_patterns=*.o;*.obj;*.a;*.lib;*.so;*.dll;*.lo;*.la;*.class;*.jar;*.pyc;*.mo;*.gmo;
+generate_tag_prefs=0
+show_empty_dirs=true
+external_dirs=
+
+[build-menu]
+NF_00_LB=_Make projet
+NF_00_CM=cd %p/build && make && cd ..
+NF_00_WD=
+NF_01_LB=Make Custom _Target…
+NF_01_CM=make 
+NF_01_WD=
+EX_00_LB=_Execute
+EX_00_CM=cd %p && ./main
+EX_00_WD=
