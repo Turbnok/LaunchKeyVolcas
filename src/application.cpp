@@ -1,20 +1,21 @@
 #include <application.hpp>
-
+#include <Screen.hpp>
+#include <MenuState.hpp>
 #include <unistd.h>
 
 void
 Application::InitMIDI(void)
 {
     midiOut =   std::make_shared<MidiOut>();
-    midiLaunch =   std::make_shared<MidiOut>();
+    midiLaunch =  std::make_shared<MidiOut>();
     midiPads  =   std::make_shared<MidiIn>();
     midiKeys  =   std::make_shared<MidiIn>();
-    
+   
     std::cout << "Midi In: " << std::endl;
     auto ports = midiOut->GetPorts();
     for (unsigned int i = 0; i < ports.size(); ++i){
-        std::cout << "Port id: " << i << " name: " << ports.at(i) << std::endl;
-     }
+		std::cout << "Port id: " << i << " name: " << ports.at(i) << std::endl;
+    }
         
 	midiKeys->OpenPort(2);
     midiPads->OpenPort(3);
@@ -39,33 +40,20 @@ Application::InitMIDI(void)
 void
 Application::Init(void)
 {
+	
     std::cout << "Play - exit" << std::endl;
-    InitMIDI();
+	InitMIDI();
+    
+    MenuState* currentState_ = new MenuState;
+    screen.setMidiOut(midiLaunch.get());
+    screen.setState(currentState_);
+       
 }
 
 void
 Application::initialState(int state){
 	if(state == 1){	
-		MidiMessage colMessage = LaunchKey::DrumPadColor;
-        colMessage.data2   =   0;
-        for (int i = 0; i < 4; ++i)
-        {
-            colMessage.data1   =   LaunchKey::DrumPads::DP1 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }
-        colMessage.data2   =   0;
-        for (int i = 0; i < 4; ++i)
-        {
-            colMessage.data1   =   LaunchKey::DrumPads::DP5 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }
-        int colors[4] = {62,33,72,0};
-        for (int i = 0; i < 4; ++i)
-        {
-			colMessage.data2   =   colors[i];
-            colMessage.data1   =   LaunchKey::DrumPads::DP9 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }
+		
     }else if(state == 2){
 		MidiMessage colMessage = LaunchKey::DrumPadColor;
         colMessage.data2   =   0;
@@ -96,47 +84,21 @@ Application::initialState(int state){
 			colMessage.data2   =   colors[i];
             colMessage.data1   =   LaunchKey::DrumPads::DP13 + i;
             midiLaunch->SendMidiMessage(colMessage);
-        }
-	
-	}
-    
+        }	
+	}    
 }
 
 void
 Application::Touch(std::optional<MidiMessage> message)
 {
-    if (!message) return;
-	
-	if(menu == 0){
-		menu = 1;
-		initialState(1);
-		
-	}else if(menu==2){
-		menu = 3;
-		// volca keys
-		initialState(2);
-		
-	}
-	
-	
+    if (!message) return;	
 	if (message->channel  ==  MidiChannel::CH10 &&
 		message->status   ==  MidiStatus::NON &&
 		message->data2.value() != 0)
 	{   
-		if(menu == 1){		
-			  std::cout   << "value: " << message->data1.value();
-			  std::cout   << "value: " << LaunchKey::DrumPads::DP1;
-			if(message->data1.value() == LaunchKey::DrumPads::DP9){
-					menu = 2;
-				}
-			}
-		if(menu == 3){		
-			MidiMessage colMessage = LaunchKey::DrumPadColorFlash;
-			colMessage.data2   =   10;
-            colMessage.data1   =   message->data1.value();
-            midiLaunch->SendMidiMessage(colMessage);	
-		}
+		screen.receiveMidi(*message);
 	}
+
 }
 
 void
@@ -171,6 +133,7 @@ void
 Application::MIDILoop(void)
 {
     std::optional<MidiMessage>  messagePads = midiPads->GetMidiMessage();
+    
     if (messagePads)
     {
         if (CompareMidiMessage(*messagePads, LaunchKey::Play))
