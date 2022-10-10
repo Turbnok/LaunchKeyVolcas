@@ -19,7 +19,7 @@ indent_mode=2
 
 [project]
 name=Launchkey
-base_path=/home/viande/Workspace/LaunchkeyMiniMK3
+base_path=/home/viande/Workspace/LaunchKeyVolcas_ok
 description=
 file_patterns=
 
@@ -28,24 +28,25 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=2
-FILE_NAME_0=1982;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2Fapplication.cpp;0;4
-FILE_NAME_1=330;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2FMenuState.hpp;0;4
-FILE_NAME_2=1264;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2FMenuState.cpp;0;4
-FILE_NAME_3=137;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2Fapplication.hpp;0;4
-FILE_NAME_4=415;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2FScreen.cpp;0;4
-FILE_NAME_5=220;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2FScreenState.hpp;0;4
-FILE_NAME_6=147;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2FScreen.hpp;0;4
-FILE_NAME_7=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2Fmidi.hpp;0;4
-FILE_NAME_8=219;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fmain.cpp;0;4
-FILE_NAME_9=539;CMake;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2FCMakeLists.txt;0;4
-FILE_NAME_10=279;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2FScreenState.cpp;0;4
-FILE_NAME_11=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2Fmidi.cpp;0;4
-FILE_NAME_12=1183;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Fsrc%2FKeysState.cpp;0;4
-FILE_NAME_13=224;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchkeyMiniMK3%2Finc%2FKeysState.hpp;0;4
+current_page=13
+FILE_NAME_0=1658;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Fsrc%2FMenuState.cpp;0;4
+FILE_NAME_1=1329;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2FVolcas.hpp;0;4
+FILE_NAME_2=752;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2Fmidi.hpp;0;4
+FILE_NAME_3=50;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Fsrc%2FScreen.cpp;0;4
+FILE_NAME_4=308;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Fsrc%2FScreenState.cpp;0;4
+FILE_NAME_5=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Fsrc%2FKeysState.cpp;0;4
+FILE_NAME_6=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2FKeysState.hpp;0;4
+FILE_NAME_7=31;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Fsrc%2Fmain.cpp;0;4
+FILE_NAME_8=346;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2Fapplication.hpp;0;4
+FILE_NAME_9=39;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2FMenuState.hpp;0;4
+FILE_NAME_10=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2FScreen.hpp;0;4
+FILE_NAME_11=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2FScreenState.hpp;0;4
+FILE_NAME_12=468;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Finc%2FBassState.hpp;0;4
+FILE_NAME_13=246;C++;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2Fsrc%2FBassState.cpp;0;4
+FILE_NAME_14=580;CMake;0;EUTF-8;1;1;0;%2Fhome%2Fviande%2FWorkspace%2FLaunchKeyVolcas_ok%2FCMakeLists.txt;0;4
 
 [VTE]
-last_dir=/home/viande/Workspace/LaunchkeyMiniMK3/src
+last_dir=/home/viande/Workspace/LaunchKeyVolcas_ok/src
 
 [prjorg]
 source_patterns=*.c;*.C;*.cpp;*.cxx;*.c++;*.cc;*.m;

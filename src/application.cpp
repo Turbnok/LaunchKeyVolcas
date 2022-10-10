@@ -17,24 +17,17 @@ Application::InitMIDI(void)
 		std::cout << "Port id: " << i << " name: " << ports.at(i) << std::endl;
     }
         
-	midiKeys->OpenPort(2);
-    midiPads->OpenPort(3);
- 
-    midiLaunch->OpenPort(3);
-    midiOut->OpenPort(1);
+	midiKeys->OpenPort(1);
+    midiPads->OpenPort(2); 
+    midiLaunch->OpenPort(2);
     
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOn);
     midiLaunch->SendMidiMessage(LaunchKey::PadModeDrum);
 	
-	menu = 0;
-	mode = 4;
+	midiOut->OpenPort(3);
+		
 	
-    MidiMessage message = LaunchKey::Play;
-    message.channel = MidiChannel::CH2;
-    message.data2 = 0x01;
-    
-   
-    midiLaunch->SendMidiMessage(message);
+	
 }
 
 void
@@ -45,7 +38,8 @@ Application::Init(void)
 	InitMIDI();
     
     MenuState* currentState_ = new MenuState;
-    screen.setMidiOut(midiLaunch.get());
+    screen.setMidiOut(midiOut.get());
+    screen.setLaunchKey(midiLaunch.get());
     screen.setState(currentState_);
        
 }
@@ -92,41 +86,7 @@ void
 Application::Touch(std::optional<MidiMessage> message)
 {
     if (!message) return;	
-	if (message->channel  ==  MidiChannel::CH10 &&
-		message->status   ==  MidiStatus::NON &&
-		message->data2.value() != 0)
-	{   
-		screen.receiveMidi(*message);
-	}
-
-}
-
-void
-Application::Brightness(void)
-{
-    static bool init = false;
-
-    if (init) return;
-    MidiMessage message = LaunchKey::PadBrightness;
-
-    // up arrow
-    message.data1 = 0x68;
-    message.data2 = LaunchKey::Brightness::P50;
-    midiLaunch->SendMidiMessage(message);
-
-    // down arrow
-    message.data1 = 0x69;
-    message.data2 = LaunchKey::Brightness::P75;
-    midiLaunch->SendMidiMessage(message);
-
-    // record button
-    message.data1 = 0x75;
-    message.data2 = LaunchKey::Brightness::P100;
-    midiLaunch->SendMidiMessage(message);
-
-    message.status = MidiStatus::NON;
-
-    init = true;
+	screen.receiveMidi(*message);	
 }
 
 void
@@ -136,7 +96,7 @@ Application::MIDILoop(void)
     
     if (messagePads)
     {
-        if (CompareMidiMessage(*messagePads, LaunchKey::Play))
+        if (CompareMidiMessage(*messagePads, LaunchKey::ArrUp))
             isPlaying = false;
 
         if (!messagePads->data2)
@@ -171,21 +131,16 @@ Application::MIDILoop(void)
                         << " data2: " << messageKeys->data2.value() << std::endl;
         }
         if(messageKeys->status==MidiStatus::NOF){
-			MidiMessage hello = MidiMessage(MidiChannel::CH10,MidiStatus::NOF, messageKeys->data1.value(),0);
+			MidiMessage hello = MidiMessage(MidiChannel::CH1,MidiStatus::NOF, messageKeys->data1.value(),0);
 			midiOut->SendMidiMessage(hello);
 		}else{
-			MidiMessage hello = MidiMessage(MidiChannel::CH10,MidiStatus::NON, messageKeys->data1.value(),messageKeys->data2.value());
+			MidiMessage hello = MidiMessage(MidiChannel::CH1,MidiStatus::NON, messageKeys->data1.value(),messageKeys->data2.value());
 			midiOut->SendMidiMessage(hello);
 		}
     }
   
-    // Touch
-    if (mode == 4)
-        Touch(messagePads);
-
-    else if (mode == 8)
-        Brightness();
-}
+    Touch(messagePads);
+ }
 
 void
 Application::Run(void)
@@ -223,9 +178,7 @@ Application::Run(void)
             colMessage.data1   =   LaunchKey::DrumPads::DP13 + i;
             midiLaunch->SendMidiMessage(colMessage);
         }
-        
     }
-
     {
         MidiMessage colMessage = LaunchKey::SessionPadColor;
         colMessage.data2   =   0;
@@ -245,7 +198,6 @@ Application::Run(void)
     message.channel = MidiChannel::CH2;
     message.data2 = LaunchKey::Brightness::P0;
     midiLaunch->SendMidiMessage(message);
-
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOff);
 }
 

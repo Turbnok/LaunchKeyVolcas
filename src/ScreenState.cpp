@@ -14,7 +14,8 @@ ScreenState::receiveMidi(MidiMessage message)
 }
 
 void
-ScreenState::init(MidiOut* pLaunchKey){
+ScreenState::init(MidiOut* pLaunchKey,MidiOut* pOut){
+	out = pOut;
 	launchKey = pLaunchKey;
 }
 ScreenState*

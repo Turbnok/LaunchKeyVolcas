@@ -10,6 +10,7 @@ add_executable( ${EXECUTABLE_NAME}
 				./src/Screen.cpp
 				./src/ScreenState.cpp
 				./src/KeysState.cpp
+				./src/BassState.cpp
 				./src/MenuState.cpp
 				./src/application.cpp
                 ./src/midi.cpp

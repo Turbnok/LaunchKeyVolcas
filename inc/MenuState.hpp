@@ -1,5 +1,5 @@
 #pragma once
-#include "ScreenState.hpp"
+#include <ScreenState.hpp>
 
 class MenuState : public ScreenState
 {
@@ -8,7 +8,7 @@ class MenuState : public ScreenState
 		~MenuState();
 		// virtual ScreenState* back();
 		// virtual ScreenState* GetNextState() = 0;
-		virtual void init(MidiOut* pLaunchKey);
+		virtual void init(MidiOut* pLaunchKey,MidiOut* pOut);
 		virtual bool receiveMidi(MidiMessage message);
 		//virtual    char* ToString();
 };

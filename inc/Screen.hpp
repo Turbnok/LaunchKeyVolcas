@@ -9,8 +9,10 @@ public:
     
     ScreenState* state;
     MidiOut* launchKey;
+    MidiOut* out;
     void setState(ScreenState* pState);
-    void setMidiOut(MidiOut* midiLaunch);
+    void setMidiOut(MidiOut* midiOut);
+    void setLaunchKey(MidiOut* midiLaunch);
     void receiveMidi(MidiMessage message);
     
 protected:

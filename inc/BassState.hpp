@@ -3,14 +3,14 @@
 #include <Volcas.hpp>
 #include <map>
 
-class KeysState : public ScreenState
+class BassState : public ScreenState
 {
 	public:
-		KeysState();    
-		~KeysState();		
+		BassState();    
+		~BassState();		
 		// virtual ScreenState* back();
 		// virtual ScreenState* GetNextState() = 0;
-		MidiChannel channel = MidiChannel::CH1;
+		MidiChannel channel = MidiChannel::CH2;
 		int currentStep = 0;
 		void init(MidiOut* pLaunchKey, MidiOut* pOut);
 		bool receiveMidi(MidiMessage message);
