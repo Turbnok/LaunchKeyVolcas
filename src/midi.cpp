@@ -74,8 +74,15 @@ MidiIn::GetMidiMessage(void)
     }
     else
     {
-        if (message.at(0) == MidiStatus::CLK) // skip clock sync
-            return std::nullopt;
+        if (message.at(0) == MidiStatus::CLK){
+            std::cout << "click" <<std::endl;
+            if (++clock_count == 24) {
+                double bpm = 60.0 / 24.0 / deltatime;
+                std::cout << "One beat, estimated BPM = " << bpm <<std::endl;
+                *clock_count = 0;
+            }
+        } // skip clock sync
+        return std::nullopt;
     }
     return std::make_optional(midiMessage);
 }

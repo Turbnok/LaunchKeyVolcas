@@ -24,15 +24,16 @@ Application::InitMIDI(void)
     for (unsigned int i = 0; i < ports.size(); ++i){
 		std::cout << "Port id: " << i << " name: " << ports.at(i) << std::endl;
     }
-        
+    midiPads->OpenPort(2); 
+    /*
 	midiKeys->OpenPort(1);
     midiPads->OpenPort(2); 
     midiLaunch->OpenPort(2);
     
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOn);
     midiLaunch->SendMidiMessage(LaunchKey::PadModeDrum);
-	
 	midiOut->OpenPort(3);
+	*/
 		
 	
 	
@@ -110,7 +111,7 @@ Application::MIDILoop(void)
 		}
     }
     
-    Touch(messagePads);
+    //Touch(messagePads);
 }
 
 
