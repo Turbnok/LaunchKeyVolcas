@@ -1,18 +1,21 @@
-#include <BassState.hpp>
+#include <VolcaKeys.hpp>
 #include <MenuState.hpp>
 #include <Volcas.hpp>
 #include <map>
 
-BassState::BassState(){
-	std::cout << "BassState Constructor" << std::endl;
+VolcaKeys::VolcaKeys(){
+	std::cout << "VolcaKeys Constructor" << std::endl;
 }
-BassState::~BassState(){
-	std::cout << "BassState deconstructor" << std::endl;
+VolcaKeys::~VolcaKeys(){
+	std::cout << "VolcaKeys deconstructor" << std::endl;
 }
 void 
-BassState::init(MidiOut* pLaunchKey, MidiOut* pOut){
-	std::cout << "BassState Init" << std::endl;    
-	ScreenState::init(pLaunchKey,pOut);		
+VolcaKeys::init(MidiOut* pLaunchKey, MidiOut* pOut){
+	std::cout << "VolcaKeys Init" << std::endl;	
+
+    
+	ScreenState::init(pLaunchKey,pOut);
+		
 	MidiMessage colMessage = LaunchKey::DrumPadColor;
     colMessage.data2   =   0;
 	for (int i = 0; i < 4; ++i)
@@ -25,7 +28,7 @@ BassState::init(MidiOut* pLaunchKey, MidiOut* pOut){
 		colMessage.data1   =   LaunchKey::DrumPads::DP5 + i;
 		launchKey->SendMidiMessage(colMessage);
 	}
-	int colors[4] = {Volcas::BASS_MAIN,Volcas::BASS_MAIN,0,0};
+	int colors[4] = {Volcas::KEYS_MAIN,Volcas::KEYS_MAIN,0,0};
     for (int i = 0; i < 4; ++i)
     {
 		colMessage.data2   =   colors[i];
@@ -41,17 +44,17 @@ BassState::init(MidiOut* pLaunchKey, MidiOut* pOut){
 	step(0);	
 }
 void
-BassState::step(int pStep){
+VolcaKeys::step(int pStep){
 	//
 	MidiMessage resetMessage = LaunchKey::DrumPadColor;
 	resetMessage.data1    =  LaunchKey::DrumPads::DP9 + currentStep;
-    resetMessage.data2    =  Volcas::BASS_MAIN;
+    resetMessage.data2    =  Volcas::KEYS_MAIN;
     launchKey->SendMidiMessage(resetMessage);
 	
 	currentStep = pStep;
 	MidiMessage colMessage = LaunchKey::DrumPadColorFlash;
 	colMessage.data1    =    LaunchKey::DrumPads::DP9 + pStep;
-    colMessage.data2    =  Volcas::BASS_ALT;
+    colMessage.data2    =  Volcas::KEYS_ALT;
     launchKey->SendMidiMessage(colMessage);
     
     if(pStep == 0){
@@ -100,13 +103,14 @@ BassState::step(int pStep){
 	
 }
 bool
-BassState::receiveMidi(MidiMessage message){
-	std::cout << "BassState midi message" << message.channel << std::endl;
+VolcaKeys::receiveMidi(MidiMessage message){
+	std::cout << "VolcaKeys midi message" << message.channel << std::endl;
 	// back
 	if(CompareMidiMessage(message,LaunchKey::ArrDown)){
 		nextState = new MenuState;
 		return true;
 	}
+	if(message.data2.value() ==0) return false;
 	if(message.data1.value() == LaunchKey::DrumPads::DP9){
 		step(0);		
 	} 

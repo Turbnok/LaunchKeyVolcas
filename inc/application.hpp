@@ -3,14 +3,15 @@
 #include <midi.hpp>
 #include <ScreenState.hpp>
 #include <Screen.hpp>
-
+#include <Sequencer.hpp>
 
 
 class Application
 {
     private:
 		Screen screen;
-		int midiOutPort =   0;
+		
+        int midiOutPort =   0;
         int midiInPort  =   0;
         int numColor    =   0;
         int mode = 0;
@@ -20,7 +21,11 @@ class Application
         std::shared_ptr<MidiOut>    midiLaunch =   nullptr;
         std::shared_ptr<MidiIn>     midiPads  =   nullptr;
         std::shared_ptr<MidiIn>     midiKeys  =   nullptr;
+
+
         bool isPlaying = true;
+        void timer_start(unsigned int interval);
+        void do_something(void);
 
         void
         InitMIDI(void);
@@ -48,3 +53,4 @@ class Application
         void
         Run(void);
 };
+

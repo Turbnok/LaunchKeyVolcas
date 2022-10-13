@@ -12,7 +12,10 @@ ScreenState::receiveMidi(MidiMessage message)
   }
  return false;
 }
-
+void
+ScreenState::update(){
+	
+}
 void
 ScreenState::init(MidiOut* pLaunchKey,MidiOut* pOut){
 	out = pOut;

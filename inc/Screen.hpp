@@ -10,6 +10,7 @@ public:
     ScreenState* state;
     MidiOut* launchKey;
     MidiOut* out;
+    void update();
     void setState(ScreenState* pState);
     void setMidiOut(MidiOut* midiOut);
     void setLaunchKey(MidiOut* midiLaunch);

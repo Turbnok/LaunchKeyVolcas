@@ -1,7 +1,15 @@
+
 #include <application.hpp>
 #include <Screen.hpp>
+#include <Sequencer.hpp>
+
 #include <MenuState.hpp>
 #include <unistd.h>
+
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <functional>
 
 void
 Application::InitMIDI(void)
@@ -45,46 +53,9 @@ Application::Init(void)
 }
 
 void
-Application::initialState(int state){
-	if(state == 1){	
-		
-    }else if(state == 2){
-		MidiMessage colMessage = LaunchKey::DrumPadColor;
-        colMessage.data2   =   0;
-		for (int i = 0; i < 4; ++i)
-        {
-            colMessage.data1   =   LaunchKey::DrumPads::DP1 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }
-        colMessage.data2   =   0;
-        for (int i = 0; i < 4; ++i)
-        {
-            colMessage.data1   =   LaunchKey::DrumPads::DP5 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }
-        int colors[4] = {9,9,9,9};
-        for (int i = 0; i < 4; ++i)
-        {
-			colMessage.data2   =   colors[i];
-            colMessage.data1   =   LaunchKey::DrumPads::DP9 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }
-        colors[0] = 9;
-        colors[1] = 0;
-        colors[2] = 0;
-        colors[3] = 0;
-        for (int i = 0; i < 4; ++i)
-        {
-			colMessage.data2   =   colors[i];
-            colMessage.data1   =   LaunchKey::DrumPads::DP13 + i;
-            midiLaunch->SendMidiMessage(colMessage);
-        }	
-	}    
-}
-
-void
 Application::Touch(std::optional<MidiMessage> message)
 {
+    
     if (!message) return;	
 	screen.receiveMidi(*message);	
 }
@@ -96,7 +67,7 @@ Application::MIDILoop(void)
     
     if (messagePads)
     {
-        if (CompareMidiMessage(*messagePads, LaunchKey::ArrUp))
+        if (CompareMidiMessage(*messagePads, LaunchKey::ArrRight))
             isPlaying = false;
 
         if (!messagePads->data2)
@@ -131,23 +102,31 @@ Application::MIDILoop(void)
                         << " data2: " << messageKeys->data2.value() << std::endl;
         }
         if(messageKeys->status==MidiStatus::NOF){
-			MidiMessage hello = MidiMessage(MidiChannel::CH1,MidiStatus::NOF, messageKeys->data1.value(),0);
+			MidiMessage hello = MidiMessage(MidiChannel::CH2,MidiStatus::NOF, messageKeys->data1.value(),0);
 			midiOut->SendMidiMessage(hello);
 		}else{
-			MidiMessage hello = MidiMessage(MidiChannel::CH1,MidiStatus::NON, messageKeys->data1.value(),messageKeys->data2.value());
+			MidiMessage hello = MidiMessage(MidiChannel::CH2,MidiStatus::NON, messageKeys->data1.value(),messageKeys->data2.value());
 			midiOut->SendMidiMessage(hello);
 		}
     }
-  
+    
     Touch(messagePads);
- }
+}
+
 
 void
 Application::Run(void)
 {
+    
     do
     {
+        screen.update();
         MIDILoop();
+        
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
+       	// MidiMessage hello = MidiMessage(MidiChannel::CH2,MidiStatus::NOF, MidiNote::C3,127);
+		// midiOut->SendMidiMessage(hello);
+        
     }
     while (isPlaying);
 
@@ -201,3 +180,7 @@ Application::Run(void)
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOff);
 }
 
+void do_something()
+    {
+        std::cout << "I am doing something" << std::endl;
+    }

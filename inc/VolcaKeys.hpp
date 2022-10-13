@@ -3,11 +3,11 @@
 #include <Volcas.hpp>
 #include <map>
 
-class KeysState : public ScreenState
+class VolcaKeys : public ScreenState
 {
 	public:
-		KeysState();    
-		~KeysState();		
+		VolcaKeys();    
+		~VolcaKeys();		
 		// virtual ScreenState* back();
 		// virtual ScreenState* GetNextState() = 0;
 		MidiChannel channel = MidiChannel::CH1;
@@ -35,6 +35,6 @@ class KeysState : public ScreenState
                 { 27, Keys::DELAY_TIME },
                 { 28, Keys::DELAY_FEEDBACK }
                }; 
-		void step(int pStep);
+	void step(int pStep);
 };
 
