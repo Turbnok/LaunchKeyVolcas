@@ -10,12 +10,16 @@ add_executable( ${EXECUTABLE_NAME}
 				./src/Screen.cpp
 				./src/ScreenState.cpp
 				./src/Sequencer.cpp
+				./src/devices/Device.cpp
 				./src/devices/VolcaKeys.cpp
 				./src/devices/VolcaBass.cpp
 				./src/MenuState.cpp
 				./src/application.cpp
                 ./src/midi.cpp
                 ./main.cpp)
+# add_executable( ${EXECUTABLE_NAME}
+# 				./src/test.cpp)
+
 SET(GCC_COVERAGE_COMPILE_FLAGS "-Wall -Wextra -std=c++20 -pedantic -lrtmidi")
 
 set(CMAKE_CXX_FLAGS ${GCC_COVERAGE_COMPILE_FLAGS})

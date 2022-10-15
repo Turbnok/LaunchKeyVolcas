@@ -356,7 +356,46 @@ namespace LaunchKey
         P100    =   0x60
     };
 }
+class MidiClock
+{
+    private:
 
+        // 16 channels - 120 controllers - value
+        std::array<std::array<unsigned char, 120>, 16>   CC =   {};
+        std::unique_ptr<RtMidiIn>   midiIn =   nullptr;
+        std::vector<unsigned char>  message;
+        std::vector<std::string>    ports;
+        
+    public:
+
+        MidiClock();
+        
+        int clock_count=0;
+
+        std::vector<std::string>&
+        GetPorts(void);
+
+        bool
+        IsPortOpen(void);
+
+        void
+        OpenPort(std::uint8_t numPort,std::string name);
+
+        void
+        clock();
+
+        static void
+        clockCallBack( double deltatime, std::vector< unsigned char > *message, void *user );
+
+        void
+        ClosePort(void);
+
+        std::optional<MidiMessage>
+        GetMidiMessage(void);
+
+        double
+        GetCCValue(std::uint8_t numCh, std::uint8_t numCtrl);
+};
 class MidiIn
 {
     private:
@@ -366,10 +405,12 @@ class MidiIn
         std::unique_ptr<RtMidiIn>   midiIn =   nullptr;
         std::vector<unsigned char>  message;
         std::vector<std::string>    ports;
-
+        
     public:
 
         MidiIn();
+        
+        int clock_count=0;
 
         std::vector<std::string>&
         GetPorts(void);
@@ -378,7 +419,13 @@ class MidiIn
         IsPortOpen(void);
 
         void
-        OpenPort(std::uint8_t numPort);
+        OpenPort(std::uint8_t numPort,std::string name);
+
+        void
+        clock();
+
+        static void
+        clockCallBack( double deltatime, std::vector< unsigned char > *message, void *user );
 
         void
         ClosePort(void);
@@ -408,8 +455,10 @@ class MidiOut
         bool
         IsPortOpen(void);
 
+      
+
         void
-        OpenPort(std::uint8_t numPort);
+        OpenPort(std::uint8_t numPort,std::string name);
 
         void
         ClosePort(void);

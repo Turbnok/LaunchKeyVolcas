@@ -1,14 +1,14 @@
 #pragma once
 #include <ScreenState.hpp>
+#include <Volcas.hpp>
 
 class MenuState : public ScreenState
 {
 	public:
-		MenuState();    
-		~MenuState();
-		// virtual ScreenState* back();
-		// virtual ScreenState* GetNextState() = 0;
-		virtual void init(MidiOut* pLaunchKey,MidiOut* pOut);
-		virtual bool receiveMidi(MidiMessage message);
-		//virtual    char* ToString();
+		MenuState(){};
+		~MenuState(){};
+		bool receiveMidi(MidiMessage message);
+	protected:
+		virtual const int* getMenuColors() const { return menuColors; }
+		int menuColors[8] = {Volcas::KEYS_MAIN,Volcas::BASS_MAIN,Volcas::FM_MAIN,Volcas::SAMPLE_MAIN,Volcas::DRUM_MAIN};
 };

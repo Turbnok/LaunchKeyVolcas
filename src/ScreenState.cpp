@@ -1,28 +1,64 @@
 #include <ScreenState.hpp>
 #include <midi.hpp>
 
-	
-bool
-ScreenState::receiveMidi(MidiMessage message) 
+
+// ScreenState::~ScreenState(){
+
+// }
+bool ScreenState::receiveMidi(MidiMessage message)
 {
   // return 'z';
   std::cout << "coucouaa" << std::endl;
-  if(message.channel){
-	  
+  if (message.channel)
+  {
   }
- return false;
+  return false;
+}
+void ScreenState::init(MidiOut *pLaunchKey, MidiOut *pOut)
+{
+  out = pOut;
+  launchKey = pLaunchKey;
+  const int* cols = getMenuColors();
+  std::cout << cols[0] << std::endl;
+  MidiMessage colMessage = LaunchKey::DrumPadColor;
+  colMessage.data2 = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    colMessage.data1 = LaunchKey::DrumPads::DP1 + i;
+    launchKey->SendMidiMessage(colMessage);
+  }
+  for (int i = 0; i < 4; ++i)
+  {
+    colMessage.data1 = LaunchKey::DrumPads::DP5 + i;
+    launchKey->SendMidiMessage(colMessage);
+  }
+  
+  for (int i = 0; i < 4; ++i)
+  {
+  //  std::cout << cols[i] << std::endl;
+    colMessage.data2 = cols[i];
+    colMessage.data1 = LaunchKey::DrumPads::DP9 + i;
+    launchKey->SendMidiMessage(colMessage);
+  }
+  colMessage.data2 = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    colMessage.data2 = cols[i+4];
+    colMessage.data1 = LaunchKey::DrumPads::DP13 + i;
+    launchKey->SendMidiMessage(colMessage);
+  }
+  step(0);
 }
 void
-ScreenState::update(){
-	
+ScreenState::step(int pStep){
+
 }
 void
-ScreenState::init(MidiOut* pLaunchKey,MidiOut* pOut){
-	out = pOut;
-	launchKey = pLaunchKey;
+ScreenState::gotoStep(int pStep){
+  step(pStep);
 }
-ScreenState*
-ScreenState::getState() 
+ScreenState *
+ScreenState::getState()
 {
   return nextState;
 }

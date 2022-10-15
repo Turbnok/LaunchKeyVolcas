@@ -31,10 +31,7 @@ Screen::setState(ScreenState* pState)
 		m_pState->receiveMidi(colMessage);
     */
 }
-void
-Screen::update(){
-	state->update();
-}
+
 void
 Screen::receiveMidi(MidiMessage message){
 	std::cout << "screen reveive midi" << std::endl;
@@ -65,16 +62,16 @@ Screen::receiveMidi(MidiMessage message){
 		out->SendMidiMessage(stopMessage);
 	
 		MidiMessage messageStop = LaunchKey::Play;
-		messageStop.channel = MidiChannel::CH2;
+		messageStop.channel = MidiChannel::CH1;
 		messageStop.data2 = 0x00;
-		launchKey->SendMidiMessage(messageStop);
-	
+		launchKey->SendMidiMessage(messageStop);	
 	}	
 	
 	bool hasToChange = state->receiveMidi(message);
 	if(hasToChange){
 		ScreenState* newState = state->getState();
 		newState->init(launchKey, out);		
+		newState->gotoStep(0);
 		state = newState;
 	}
 }

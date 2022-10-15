@@ -1,3 +1,7 @@
+# Korg Volcas Sequencer
+
+
+
 # Reverse enginneered MIDI implementation of Launchkey Mini MK3 by Novation
 ## Intro
 I've got Launchkey Mini to control my synthesizers and use it as controller for my VJ framework.

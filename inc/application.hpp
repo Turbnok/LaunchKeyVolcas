@@ -17,10 +17,12 @@ class Application
         int mode = 0;
         int synth = 0;
         int menu = 0;
+
         std::shared_ptr<MidiOut>    midiOut =   nullptr;
         std::shared_ptr<MidiOut>    midiLaunch =   nullptr;
         std::shared_ptr<MidiIn>     midiPads  =   nullptr;
         std::shared_ptr<MidiIn>     midiKeys  =   nullptr;
+        std::shared_ptr<MidiClock>     midiClock  =   nullptr;
 
 
         bool isPlaying = true;
