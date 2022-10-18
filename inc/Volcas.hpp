@@ -14,7 +14,17 @@ class Volcas
 		static constexpr int SAMPLE_ALT	= 60;
 		static constexpr int DRUM_ALT	= 10;
 		static constexpr int NONE		= 0;
+		static constexpr int SELECT		= 20;
 };
+class UI
+{
+	public:
+		static constexpr int NONE		= 0;
+		static constexpr int SELECT		= 20;
+		static constexpr int IN			= 17;
+		static constexpr int OUT		= 60;
+};
+
 class Pots{
 	public:
 		static constexpr int VCO		= 13;
@@ -23,6 +33,8 @@ class Pots{
 		static constexpr int EG			= 49;
 		static constexpr int OCT		= 5;		
 		static constexpr int SPECIAL	= 57;		
+		static constexpr int DELAY	= 25;		
+		
 	
 };
 

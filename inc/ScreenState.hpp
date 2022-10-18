@@ -7,11 +7,12 @@ class ScreenState
 		~ScreenState(){};
 		virtual bool receiveMidi(MidiMessage message);
 		virtual ScreenState* getState();
-		void init(MidiOut* pLaunchKey,MidiOut* pOut);
-		void gotoStep(int pInt);
+		void init(MidiOut* pLaunchKey,MidiOut* pOut, MidiClock* pClock);
+		virtual void gotoStep(int pInt);
 	protected:
 		MidiOut* launchKey;
 		MidiOut* out;
+		MidiClock* midiClock;
 		ScreenState* nextState;
 
 		int menuColors[8] = {0,0,12,0,0,0,0,0};

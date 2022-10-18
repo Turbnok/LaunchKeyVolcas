@@ -12,7 +12,7 @@ class Sequencer: public ScreenState
 		
         void update();
         bool receiveMidi(MidiMessage message);
-        void init(MidiOut *pLaunchKey, MidiOut *pOut);
+        void init(MidiOut* pLaunchKey, MidiOut* pOut, MidiClock* midiClock);
         void play();
         void stop();
         void resume();

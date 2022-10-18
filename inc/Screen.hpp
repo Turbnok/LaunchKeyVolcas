@@ -10,8 +10,10 @@ public:
     ScreenState* state;
     MidiOut* launchKey;
     MidiOut* out;
+    MidiClock* midiClock;
     
     void setState(ScreenState* pState);
+    void setMidiClock(MidiClock* midiIn);
     void setMidiOut(MidiOut* midiOut);
     void setLaunchKey(MidiOut* midiLaunch);
     void receiveMidi(MidiMessage message);

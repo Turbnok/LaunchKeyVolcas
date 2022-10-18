@@ -355,6 +355,9 @@ namespace LaunchKey
         P75     =   0x40,
         P100    =   0x60
     };
+    const int PADS[16] = {
+        DP1,DP2,DP3,DP4,DP5,DP6,DP7,DP8,DP9,DP10,DP11,DP12,DP13,DP14,DP15,DP16,
+    };
 }
 class MidiClock
 {

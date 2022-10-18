@@ -5,52 +5,98 @@
 
 #include <MenuState.hpp>
 #include <unistd.h>
+#include <Config.hpp>
 
 #include <iostream>
 #include <chrono>
 #include <thread>
 #include <functional>
+#include <fstream>
+/*
+void Application::bindPorts(void){
 
+}
+*/
 void Application::InitMIDI(void)
 {
     midiOut = std::make_shared<MidiOut>();
-    midiLaunch = std::make_shared<MidiOut>();
     midiClock = std::make_shared<MidiClock>();
+
+    midiLaunch = std::make_shared<MidiOut>();
     midiPads = std::make_shared<MidiIn>();
     midiKeys = std::make_shared<MidiIn>();
 
     std::cout << "Midi In: " << std::endl;
-    auto ports = midiClock->GetPorts();
+    auto ports = midiLaunch->GetPorts();
+    int midiKeysInPort = -1;
+    int midiLaunchPort = -1;
+
     for (unsigned int i = 0; i < ports.size(); ++i)
     {
         std::cout << "Port id: " << i << " name: " << ports.at(i) << std::endl;
+        std::string en = ports.at(i);
+        int ind = en.find("Launchkey Mini MK3");
+        if (ind != -1)
+        {
+            ind = en.find(":0");
+            if (ind != -1)
+            {
+                midiKeysInPort = i;
+            }
+            ind = en.find(":1");
+            if (ind != -1)
+            {
+                midiLaunchPort = i;
+            }
+        }
     }
-    std::cout << "Midi Out: " << std::endl;
     ports = midiOut->GetPorts();
     for (unsigned int i = 0; i < ports.size(); ++i)
     {
         std::cout << "Port id: " << i << " name: " << ports.at(i) << std::endl;
+        std::string en = ports.at(i);
+        int ind = en.find("Launchkey Mini MK3");
+        if (ind != -1)
+        {
+            ind = en.find(":0");
+            if (ind != -1)
+            {
+                midiKeysInPort = i;
+            }
+            ind = en.find(":1");
+            if (ind != -1)
+            {
+                midiLaunchPort = i;
+            }
+        }
     }
-    // midiClock->OpenPort(1,"Clock");
 
-    midiKeys->OpenPort(2, "Keys");
-    midiPads->OpenPort(3, "Pads");
-    midiLaunch->OpenPort(3, "LaunchKey");
+    if ((midiKeysInPort == -1) || (midiLaunchPort == -1))
+    {
+        std::cout << "rien trouvé " << std::endl;
+        isPlaying = false;
+        return;
+    }
+
+    midiKeys->OpenPort(midiKeysInPort, "LMV-Keys");
+    midiPads->OpenPort(midiLaunchPort, "LMV-Pads");
+    midiLaunch->OpenPort(midiLaunchPort, "LMV-LaunchKey");
 
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOn);
     midiLaunch->SendMidiMessage(LaunchKey::PadModeDrum);
-    midiOut->OpenPort(1, "Out");
+
+    midiClock->OpenPort(Config::getAsInt("MIDI_CLOCK_PORT"), "LMV-Clock");
+    midiOut->OpenPort(Config::getAsInt("MIDI_OUT_PORT"), "LMV-Out");
 }
 
 void Application::Init(void)
 {
-
-    std::cout << "Play - exit" << std::endl;
+    Config::init();
     InitMIDI();
     MenuState *currentState_ = new MenuState;
     screen.setMidiOut(midiOut.get());
     screen.setLaunchKey(midiLaunch.get());
-    // screen.setClock()
+    screen.setMidiClock(midiClock.get());
     screen.setState(currentState_);
 }
 
@@ -102,18 +148,17 @@ void Application::MIDILoop(void)
                       << " data1: " << messageKeys->data1.value()
                       << " data2: " << messageKeys->data2.value() << std::endl;
         }
-
+        // ignore pitch or modulation
         if (messageKeys->status != 224 && messageKeys->status != 176)
         {
-            // pitch or modulation
             if (messageKeys->status == MidiStatus::NOF)
             {
-                MidiMessage hello = MidiMessage(MidiChannel::CH1, MidiStatus::NOF, messageKeys->data1.value(), 0);
+                MidiMessage hello = MidiMessage(Config::keyChannel, MidiStatus::NOF, messageKeys->data1.value(), 0);
                 midiOut->SendMidiMessage(hello);
             }
             else
             {
-                MidiMessage hello = MidiMessage(MidiChannel::CH1, MidiStatus::NON, messageKeys->data1.value(), messageKeys->data2.value());
+                MidiMessage hello = MidiMessage(Config::keyChannel, MidiStatus::NON, messageKeys->data1.value(), messageKeys->data2.value());
                 midiOut->SendMidiMessage(hello);
             }
         }
@@ -128,7 +173,7 @@ void Application::Run(void)
     do
     {
         MIDILoop();
-        
+
     } while (isPlaying);
 
     {

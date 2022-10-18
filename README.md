@@ -1,5 +1,7 @@
 # Korg Volcas Sequencer
 
+# dependencies 
+``` apt install libyaml-cpp-dev ```
 
 
 # Reverse enginneered MIDI implementation of Launchkey Mini MK3 by Novation

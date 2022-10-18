@@ -14,9 +14,10 @@ bool ScreenState::receiveMidi(MidiMessage message)
   }
   return false;
 }
-void ScreenState::init(MidiOut *pLaunchKey, MidiOut *pOut)
+void ScreenState::init(MidiOut *pLaunchKey, MidiOut *pOut, MidiClock* pClock)
 {
   out = pOut;
+  midiClock = pClock;
   launchKey = pLaunchKey;
   const int* cols = getMenuColors();
   std::cout << cols[0] << std::endl;

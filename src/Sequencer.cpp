@@ -9,9 +9,9 @@ Sequencer::~Sequencer(){
 }
 
 void 
-Sequencer::init(MidiOut* pLaunchKey,MidiOut* pOut){
+Sequencer::init(MidiOut* pLaunchKey,MidiOut* pOut, MidiClock* pClock){
     std::cout << "Sequecer Init" << std::endl;    
-	ScreenState::init(pLaunchKey,pOut);		
+	ScreenState::init(pLaunchKey,pOut,pClock);		
 	MidiMessage colMessage = LaunchKey::DrumPadColor;
     colMessage.data2   =   0;
 	for (int i = 0; i < 4; ++i)

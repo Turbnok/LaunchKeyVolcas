@@ -15,6 +15,10 @@ void
 Screen::setMidiOut(MidiOut* midiOut){
 	out = midiOut;	
 }
+void 
+Screen::setMidiClock(MidiClock* midiIn){
+	midiClock = midiIn;	
+}
 void
 Screen::setLaunchKey(MidiOut* midiLaunch){
 	launchKey = midiLaunch;	
@@ -24,7 +28,8 @@ Screen::setState(ScreenState* pState)
 {	
 	std::cout << "setState" << std::endl;
 	state = pState;
-	state->init(launchKey, out);
+	state->init(launchKey, out, midiClock);
+	state->gotoStep(0);
 	
     /*
 		MidiMessage colMessage = LaunchKey::DrumPadColor;
@@ -70,7 +75,7 @@ Screen::receiveMidi(MidiMessage message){
 	bool hasToChange = state->receiveMidi(message);
 	if(hasToChange){
 		ScreenState* newState = state->getState();
-		newState->init(launchKey, out);		
+		newState->init(launchKey, out, midiClock);		
 		newState->gotoStep(0);
 		state = newState;
 	}

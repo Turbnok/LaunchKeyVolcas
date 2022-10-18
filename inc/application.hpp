@@ -4,12 +4,14 @@
 #include <ScreenState.hpp>
 #include <Screen.hpp>
 #include <Sequencer.hpp>
+#include <Config.hpp>
+
 
 
 class Application
 {
     private:
-		Screen screen;
+        Screen screen;
 		
         int midiOutPort =   0;
         int midiInPort  =   0;

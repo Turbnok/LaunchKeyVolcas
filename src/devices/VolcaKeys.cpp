@@ -20,17 +20,17 @@ VolcaKeys::step(int pStep){
     
     if(pStep == 0){
 		colMessage = LaunchKey::DrumPadColor;
-		int colors[4] = {49,49,9,9};
+		int colors[4] = {Pots::OCT,Pots::OCT,Pots::VCO,Pots::VCO};
 		for (int i = 0; i < 4; ++i)
 		{
 			colMessage.data1   =   LaunchKey::DrumPads::DP1 + i;
 			colMessage.data2   = colors[i] ;
 			launchKey->SendMidiMessage(colMessage);
 		}
-		colors[0] = 9;
-		colors[1] = 14;
+		colors[0] = Pots::VCO;
+		colors[1] = Pots::VCF;
 		colors[2] = 0;
-		colors[3] = 14;
+		colors[3] = Pots::VCF;
 		for (int i = 0; i <	4; ++i)
 		{
 			colMessage.data1   = LaunchKey::DrumPads::DP5 + i;
@@ -40,17 +40,17 @@ VolcaKeys::step(int pStep){
 	}else if(pStep == 1){
 	
 		colMessage = LaunchKey::DrumPadColor;
-		int colors[4] = {9,9,9,14};
+		int colors[4] = { Pots::LFO,Pots::LFO,Pots::LFO,Pots::EG};
 		for (int i = 0; i < 4; ++i)
 		{
 			colMessage.data1   =   LaunchKey::DrumPads::DP1 + i;
 			colMessage.data2   = colors[i] ;
 			launchKey->SendMidiMessage(colMessage);
 		}
-		colors[0] = 14;
-		colors[1] = 14;
-		colors[2] = 53;
-		colors[3] = 53;
+		colors[0] = Pots::EG;
+		colors[1] = Pots::EG;
+		colors[2] = Pots::DELAY;
+		colors[3] = Pots::DELAY;
 		
 		for (int i = 0; i <	4; ++i)
 		{
