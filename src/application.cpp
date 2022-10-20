@@ -21,7 +21,7 @@ void Application::InitMIDI(void)
 {
     midiOut = std::make_shared<MidiOut>();
     midiClock = std::make_shared<MidiClock>();
-
+    sequencer = std::make_shared<Sequencer>();
     midiLaunch = std::make_shared<MidiOut>();
     midiPads = std::make_shared<MidiIn>();
     midiKeys = std::make_shared<MidiIn>();
@@ -97,20 +97,18 @@ void Application::Init(void)
     screen.setMidiOut(midiOut.get());
     screen.setLaunchKey(midiLaunch.get());
     screen.setMidiClock(midiClock.get());
+    screen.setSequencer(sequencer.get());
+
+
+    //screen.setSequencer(sequencer.get());
     screen.setState(currentState_);
 }
 
-void Application::Touch(std::optional<MidiMessage> message)
+
+void Application::loop(void)
 {
-
-    if (!message)
-        return;
-    screen.receiveMidi(*message);
-}
-
-void Application::MIDILoop(void)
-{
-
+    sequencer->update();
+    
     std::optional<MidiMessage> messagePads = midiPads->GetMidiMessage();
     if (messagePads)
     {
@@ -130,6 +128,7 @@ void Application::MIDILoop(void)
                       << " data1: " << messagePads->data1.value()
                       << " data2: " << messagePads->data2.value() << std::endl;
         }
+        screen.receiveMidi(*messagePads);
         // midiOut->SendMidiMessage(*messagePads);
     }
     std::optional<MidiMessage> messageKeys = midiKeys->GetMidiMessage();
@@ -162,9 +161,8 @@ void Application::MIDILoop(void)
                 midiOut->SendMidiMessage(hello);
             }
         }
+        sequencer->receiveKeys(*messageKeys);
     }
-
-    Touch(messagePads);
 }
 
 void Application::Run(void)
@@ -172,7 +170,8 @@ void Application::Run(void)
 
     do
     {
-        MIDILoop();
+        loop();
+      
 
     } while (isPlaying);
 

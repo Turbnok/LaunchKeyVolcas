@@ -14,6 +14,6 @@ class Config
         static void init();
         //YAML::Node get(std::string pKey);
         static MidiChannel keyChannel;
-		static YAML::Node config; 
+		    static YAML::Node config; 
     private:
 };

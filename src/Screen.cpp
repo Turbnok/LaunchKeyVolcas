@@ -3,6 +3,8 @@
 #include <ScreenState.hpp>
 #include <midi.hpp>
 
+
+
 Screen::Screen()
 {
 	
@@ -24,6 +26,11 @@ Screen::setLaunchKey(MidiOut* midiLaunch){
 	launchKey = midiLaunch;	
 }
 void
+Screen::setSequencer(Sequencer* pSequencer){
+	sequencer = pSequencer;
+	sequencer->init(launchKey, out, midiClock);
+}
+void
 Screen::setState(ScreenState* pState)
 {	
 	std::cout << "setState" << std::endl;
@@ -41,7 +48,12 @@ void
 Screen::receiveMidi(MidiMessage message){
 	std::cout << "screen reveive midi" << std::endl;
 	// global message
-	
+	  // ignore pitch or modulation
+    if (message.status == 224 || (message.status == 176 && message.data2 == 0)) 
+    {
+		
+		return;
+	}
 	if(CompareMidiMessage(message,LaunchKey::Play)){
 		
 		MidiMessage playMessage{};
@@ -58,20 +70,34 @@ Screen::receiveMidi(MidiMessage message){
 	}	
 	
 	if(CompareMidiMessage(message,LaunchKey::Record)){
-	
-		MidiMessage stopMessage{};
-		stopMessage.channel = MidiChannel::CH1;
-		stopMessage.status = MidiStatus::STOP; 
-		stopMessage.data2    = 0;
-		stopMessage.data1    = 1;
-		out->SendMidiMessage(stopMessage);
-	
+		record = !record;
+		sequencer->setRecord(record);
+		MidiMessage recordMessage =  LaunchKey::Record;//LaunchKey::DrumPadColor;
+		if(!record){
+			recordMessage.data2 = 0;
+		}		
+		//recordMessage.data1    = LaunchKey::Record;
+		//recordMessage.data2    = record ? 127 : 0;
+		out->SendMidiMessage(recordMessage);
+		/*
 		MidiMessage messageStop = LaunchKey::Play;
 		messageStop.channel = MidiChannel::CH1;
 		messageStop.data2 = 0x00;
 		launchKey->SendMidiMessage(messageStop);	
+		*/
 	}	
-	
+	if(CompareMidiMessage(message,LaunchKey::ArrUp)){
+		mode = !mode;
+		state->hide();
+		if(mode){
+			oldState = state;
+			state = sequencer;
+		}else{
+			state = oldState;
+		}		
+		state->show();
+		return;
+	}
 	bool hasToChange = state->receiveMidi(message);
 	if(hasToChange){
 		ScreenState* newState = state->getState();

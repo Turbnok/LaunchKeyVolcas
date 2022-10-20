@@ -11,61 +11,86 @@ Sequencer::~Sequencer(){
 void 
 Sequencer::init(MidiOut* pLaunchKey,MidiOut* pOut, MidiClock* pClock){
     std::cout << "Sequecer Init" << std::endl;    
-	ScreenState::init(pLaunchKey,pOut,pClock);		
+	//ScreenState::init(pLaunchKey,pOut,pClock);		
+	out = pOut;
+  	midiClock = pClock;
+  	launchKey = pLaunchKey;
+}
+
+void
+Sequencer::hide(){
+	std::cout << "hide sequencer" <<std::endl;
+	shown = false;
+}
+void
+Sequencer::show(){
+	std::cout << "sequencer show" <<std::endl;
+	shown = true;
 	MidiMessage colMessage = LaunchKey::DrumPadColor;
-    colMessage.data2   =   0;
-	for (int i = 0; i < 4; ++i)
+	colMessage.data2   =   0;
+	for (int i = 0; i < 16; i++)
 	{
-		pads[i] = LaunchKey::DrumPads::DP1 + i;
-		colMessage.data1 = LaunchKey::DrumPads::DP1 + i;
+		LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[i]);
+		colMessage.data1 = pad;
 		launchKey->SendMidiMessage(colMessage);
 	}
-	for (int i = 0; i < 4; ++i)
-	{
-		pads[i+4] = LaunchKey::DrumPads::DP5 + i;
-		colMessage.data1 = LaunchKey::DrumPads::DP5 + i;
-		launchKey->SendMidiMessage(colMessage);
-	}
-    for (int i = 0; i < 4; ++i)
-    {
-		pads[i+8] =  LaunchKey::DrumPads::DP9 + i;
-        colMessage.data1 = LaunchKey::DrumPads::DP9 + i;
-        launchKey->SendMidiMessage(colMessage);
-    }
-	for (int i = 0; i < 4; ++i)
-	{
-		pads[i+12] =  LaunchKey::DrumPads::DP13 + i;
-		colMessage.data1 = LaunchKey::DrumPads::DP13 + i;
-		launchKey->SendMidiMessage(colMessage);
-	}	
 }
 
 void 
 Sequencer::update(){
+	
     std::chrono::steady_clock::time_point elapsed = std::chrono::steady_clock::now();  
     if ((std::chrono::duration_cast<std::chrono::milliseconds> (elapsed - last).count()) > interval)
     {
-        MidiMessage colMessage = LaunchKey::DrumPadColor;
-		colMessage.data1   =   pads[currentStep];
-		colMessage.data2   =   0;
-		launchKey->SendMidiMessage(colMessage);
-
+		if(shown){
+        	MidiMessage colMessage = LaunchKey::DrumPadColor;
+			colMessage.data1   =   static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[currentStep]);
+			colMessage.data2   =   0;
+			launchKey->SendMidiMessage(colMessage);
+		}
 		currentStep++;
         if (currentStep == totalSteps)
         {
             currentStep = 0;
         }
         last = elapsed;		
-
-		colMessage = LaunchKey::DrumPadColor;
-		colMessage.data1   =   pads[currentStep];
-		colMessage.data2   =   32;
-		launchKey->SendMidiMessage(colMessage);
+		MidiMessage n = msg[currentStep][0];
+		if(n.status != MidiStatus::UNDEF){
+			std::cout << "hop ? " << std::endl;
+			std::cout << "channel: " << n.channel 
+                      << " status: " << n.status 
+                      << " data2: " << n.data2.value() << std::endl;
+			n.channel = MidiChannel::CH1;
+			out->SendMidiMessage(n);
+		}
+		if(shown){
+			MidiMessage colMessage = LaunchKey::DrumPadColor;
+			colMessage = LaunchKey::DrumPadColor;
+			colMessage.data1   =   static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[currentStep]);
+			colMessage.data2   =   32;
+			launchKey->SendMidiMessage(colMessage);
+		}
     }
+	
+}
+void
+Sequencer::setRecord(bool pOnOff){
+	record = pOnOff;
 }
 
+void
+Sequencer::receiveKeys(MidiMessage message){
+	if(record){
+		std::cout << "Sequencer midi message : " << message.channel << std::endl;
+		std::cout << "data1 : " << message.data1.value() << std::endl;
+		std::cout << "data2 : " << message.data2.value() << std::endl;
+		msg[currentStep][0] = message; 	
+	}
+}
 bool
 Sequencer::receiveMidi(MidiMessage message){
+	std::cout << "Sequencer midi message : " << message.channel << std::endl;
+	/*
 	std::cout << "menu state midi message : " << message.channel << std::endl;
 	std::cout << " : " << message.data1.value() << std::endl;
 	if(message.data2.value() ==0) return false;
@@ -83,6 +108,7 @@ Sequencer::receiveMidi(MidiMessage message){
 		tempo =  message.data2.value();
 		interval = 60000 / tempo / 4;
 	}
+	*/
 	return false;
 }
 

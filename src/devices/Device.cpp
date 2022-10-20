@@ -61,16 +61,6 @@ bool Device::receiveMidi(MidiMessage message)
 	{
 		step(1);
 	}
-	// if(message.data1.value() == LaunchKey::DrumPads::DP11){
-	// 	std::cout << "P111" << message.channel << std::endl;
-	// 	MidiMessage playMessage = LaunchKey::DrumPadColor;
-	// 	playMessage.channel = MidiChannel::CH1;
-	// 	playMessage.status = MidiStatus::START;
-	// 	playMessage.data2    = 0;
-	// 	playMessage.data1    = 0x1;
-	// 	out->SendMidiMessage(playMessage);
-	// 	return false;
-	// }
 	return false;
 }
 

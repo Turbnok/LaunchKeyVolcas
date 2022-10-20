@@ -20,6 +20,7 @@ class Application
         int synth = 0;
         int menu = 0;
 
+        std::shared_ptr<Sequencer>    sequencer =   nullptr;
         std::shared_ptr<MidiOut>    midiOut =   nullptr;
         std::shared_ptr<MidiOut>    midiLaunch =   nullptr;
         std::shared_ptr<MidiIn>     midiPads  =   nullptr;
@@ -35,13 +36,8 @@ class Application
         InitMIDI(void);
 
         void
-        Touch(std::optional<MidiMessage> message);
+        loop(void);
 
-        void
-        MIDILoop(void);
-
-        void
-        Brightness(void);
 
     public:
 

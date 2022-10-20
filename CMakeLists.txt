@@ -9,7 +9,6 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/inc /usr/include)
 add_executable( ${EXECUTABLE_NAME}
 ./src/Screen.cpp
 ./src/ScreenState.cpp
-./src/Sequencer.cpp
 ./src/devices/Device.cpp
 ./src/devices/VolcaKeys.cpp
 ./src/devices/VolcaBass.cpp
@@ -17,6 +16,7 @@ add_executable( ${EXECUTABLE_NAME}
 ./src/ConfigInOut.cpp
 ./src/Config.cpp
 ./src/application.cpp
+./src/Sequencer.cpp
 ./src/midi.cpp
                 ./main.cpp)
 # add_executable( ${EXECUTABLE_NAME}

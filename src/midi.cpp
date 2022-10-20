@@ -27,40 +27,16 @@ bool MidiIn::IsPortOpen(void)
 {
     return midiIn->isPortOpen();
 }
-void MidiIn::clockCallBack( double deltatime, std::vector< unsigned char > *message, void *user )
-{
-  unsigned int *clock_count = reinterpret_cast<unsigned int*>(user);
-  // Ignore longer messages
-  if (message->size() != 1)
-    return;
-
-  unsigned int msg = message->at(0);
-  if (msg == 0xFA)
-    std::cout << "START received" << std::endl;
-  if (msg == 0xFB)
-    std::cout << "CONTINUE received" << std::endl;
-  if (msg == 0xFC)
-    std::cout << "STOP received" << std::endl;
-  if (msg == 0xF8) {
-    if (++*clock_count == 24) {
-      double bpm = 60.0 / 24.0 / deltatime;
-      std::cout << "One beat, estimated BPM = " << bpm <<std::endl;
-      *clock_count = 0;
-    }
-  }
-  else
-    *clock_count = 0;
-}
 void MidiIn::OpenPort(std::uint8_t numPort,std::string name)
 {
-    //midiIn->setCallback( &clockCallBack, &clock_count );
+    
     unsigned int numPorts = midiIn->getPortCount();
     if (numPort < numPorts)
         midiIn->openPort(numPort,name+ " Input");
     else
         midiIn->openPort(0,name  + " Input");
     midiIn->setClientName(name);
-    midiIn->ignoreTypes(false, false, false);
+    midiIn->ignoreTypes(true, true, true);
 
 }
 
@@ -71,25 +47,7 @@ void MidiIn::ClosePort(void)
 
 void MidiIn::clock(void)
 {
-    if (!midiIn->isPortOpen())
-        return; // std::nullopt;
-        
-    midiIn->getMessage(&message);
     
-    if (message.size() == 0)
-    {
-        return;
-    }
-    if (message.at(0) == MidiStatus::CLK)
-    {
-        
-        if (++clock_count == 24)
-        {
-            double bpm = 60.0 / 24.0 / 16;
-            std::cout << "One beat, estimated BPM = " << bpm << std::endl;
-            clock_count = 0;
-        }
-    } // skip clock sync
 }
 
 std::optional<MidiMessage>
@@ -122,12 +80,6 @@ MidiIn::GetMidiMessage(void)
         if (message.at(0) == MidiStatus::CLK)
         {
             return std::nullopt;
-            //std::cout << "click" << std::endl;
-            // if (++clock_count == 24) {
-            //     double bpm = 60.0 / 24.0 / deltatime;
-            //     std::cout << "One beat, estimated BPM = " << bpm <<std::endl;
-            //     *clock_count = 0;
-            // }
         } // skip clock sync
     }
     return std::make_optional(midiMessage);
@@ -191,7 +143,8 @@ void MidiOut::SendMidiMessage(MidiMessage midiMessage)
         midiOut->sendMessage(&message);
 }
 
-
+double
+MidiClock::deltatime =0.0;
 MidiClock::MidiClock()
 {
     midiIn = std::make_unique<RtMidiIn>();
@@ -211,7 +164,7 @@ bool MidiClock::IsPortOpen(void)
 {
     return midiIn->isPortOpen();
 }
-void MidiClock::clockCallBack( double deltatime, std::vector< unsigned char > *message, void *user )
+void MidiClock::clockCallBack( double pDeltatime, std::vector< unsigned char > *message, void *user )
 {
   unsigned int *clock_count = reinterpret_cast<unsigned int*>(user);
   // Ignore longer messages
@@ -226,11 +179,13 @@ void MidiClock::clockCallBack( double deltatime, std::vector< unsigned char > *m
   if (msg == 0xFC)
     std::cout << "STOP received" << std::endl;
   if (msg == 0xF8) {
+    MidiClock::deltatime += pDeltatime;
     if (++*clock_count == 24) {
-    
-      double bpm = 60.0 / 24.0 / deltatime;
-      std::cout << "One beat, estimated BPM = " << bpm << " : " << deltatime <<std::endl;
+      double bpm = 60.0 / 24.0 /  (MidiClock::deltatime / 24.0);
+      double hop =  60.0 / 24.0 / pDeltatime;
+      std::cout << "One beat, estimated BPM = " << bpm << " : " << deltatime << " : " << hop <<std::endl;
       *clock_count = 0;
+      MidiClock::deltatime  = 0.0;
     }
   }
   else
@@ -256,25 +211,25 @@ void MidiClock::ClosePort(void)
 
 void MidiClock::clock(void)
 {
-    if (!midiIn->isPortOpen())
-        return; // std::nullopt;
+    // if (!midiIn->isPortOpen())
+    //     return; // std::nullopt;
         
-    midiIn->getMessage(&message);
+    // midiIn->getMessage(&message);
     
-    if (message.size() == 0)
-    {
-        return;
-    }
-    if (message.at(0) == MidiStatus::CLK)
-    {
+    // if (message.size() == 0)
+    // {
+    //     return;
+    // }
+    // if (message.at(0) == MidiStatus::CLK)
+    // {
         
-        if (++clock_count == 24)
-        {
-            double bpm = 60.0 / 24.0 / 16;
-            std::cout << "One beat, estimated BPM = " << bpm << std::endl;
-            clock_count = 0;
-        }
-    } // skip clock sync
+    //     if (++clock_count == 24)
+    //     {
+    //         double bpm = 60.0 / 24.0 / 16;
+    //         std::cout << "One beat, estimated BPM = " << bpm << std::endl;
+    //         clock_count = 0;
+    //     }
+    // } // skip clock sync
 }
 
 std::optional<MidiMessage>

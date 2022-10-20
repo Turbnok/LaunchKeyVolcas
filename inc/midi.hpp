@@ -1,8 +1,6 @@
 #pragma once
-
 #include <optional>
 #include <memory>
-
 #include <rtmidi/RtMidi.h>
 
 enum MidiNote
@@ -35,6 +33,7 @@ enum MidiStatus
     STOP    =   0xFC,
     ACTSENS =   0xFE,
     SYSRES  =   0xFF,
+    UNDEF    =   0x00,
 };
 
 enum MidiChannel
@@ -373,6 +372,7 @@ class MidiClock
 
         MidiClock();
         
+        static double deltatime;
         int clock_count=0;
 
         std::vector<std::string>&
@@ -388,7 +388,7 @@ class MidiClock
         clock();
 
         static void
-        clockCallBack( double deltatime, std::vector< unsigned char > *message, void *user );
+        clockCallBack( double pDeltatime, std::vector< unsigned char > *message, void *user );
 
         void
         ClosePort(void);
@@ -399,6 +399,7 @@ class MidiClock
         double
         GetCCValue(std::uint8_t numCh, std::uint8_t numCtrl);
 };
+
 class MidiIn
 {
     private:
@@ -427,9 +428,6 @@ class MidiIn
         void
         clock();
 
-        static void
-        clockCallBack( double deltatime, std::vector< unsigned char > *message, void *user );
-
         void
         ClosePort(void);
 
@@ -457,8 +455,6 @@ class MidiOut
 
         bool
         IsPortOpen(void);
-
-      
 
         void
         OpenPort(std::uint8_t numPort,std::string name);

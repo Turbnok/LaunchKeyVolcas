@@ -1,10 +1,7 @@
+
 #include <ScreenState.hpp>
 #include <midi.hpp>
 
-
-// ScreenState::~ScreenState(){
-
-// }
 bool ScreenState::receiveMidi(MidiMessage message)
 {
   // return 'z';
@@ -19,6 +16,12 @@ void ScreenState::init(MidiOut *pLaunchKey, MidiOut *pOut, MidiClock* pClock)
   out = pOut;
   midiClock = pClock;
   launchKey = pLaunchKey;
+  show();
+  step(0);
+}
+void
+ScreenState::show(){
+  shown = true;
   const int* cols = getMenuColors();
   std::cout << cols[0] << std::endl;
   MidiMessage colMessage = LaunchKey::DrumPadColor;
@@ -48,7 +51,12 @@ void ScreenState::init(MidiOut *pLaunchKey, MidiOut *pOut, MidiClock* pClock)
     colMessage.data1 = LaunchKey::DrumPads::DP13 + i;
     launchKey->SendMidiMessage(colMessage);
   }
-  step(0);
+  gotoStep(currentStep);
+}
+
+void
+ScreenState::hide(){
+  shown = false;
 }
 void
 ScreenState::step(int pStep){
@@ -56,6 +64,7 @@ ScreenState::step(int pStep){
 }
 void
 ScreenState::gotoStep(int pStep){
+  currentStep = pStep;
   step(pStep);
 }
 ScreenState *

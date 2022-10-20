@@ -1,7 +1,7 @@
 #include <VolcaBass.hpp>
 #include <MenuState.hpp>
 #include <Volcas.hpp>
-#include <Sequencer.hpp>
+
 #include <map>
 
 void

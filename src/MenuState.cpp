@@ -61,10 +61,9 @@ MenuState::receiveMidi(MidiMessage message){
 void
 MenuState::gotoStep(int pStep){
 	std::cout << "Menu state goto" << std::endl;
+	ScreenState::gotoStep(pStep);
 	currentPad = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[Config::getAsInt("KEYS_PAD")]);
 	
-
-
 	MidiMessage colMessage = LaunchKey::DrumPadColorPulse;
 	colMessage.data1    =  currentPad;
     colMessage.data2    =  Volcas::SELECT;
