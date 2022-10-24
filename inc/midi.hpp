@@ -357,6 +357,7 @@ namespace LaunchKey
     const int PADS[16] = {
         DP1,DP2,DP3,DP4,DP5,DP6,DP7,DP8,DP9,DP10,DP11,DP12,DP13,DP14,DP15,DP16,
     };
+    
 }
 class MidiClock
 {
@@ -462,6 +463,9 @@ class MidiOut
         void
         ClosePort(void);
 
+        void
+        SendNoteOff(MidiNote midiNote, MidiChannel channel);
+        
         void
         SendMidiMessage(MidiMessage midiMessage);
 };

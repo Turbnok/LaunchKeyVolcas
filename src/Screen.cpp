@@ -54,38 +54,6 @@ Screen::receiveMidi(MidiMessage message){
 		
 		return;
 	}
-	if(CompareMidiMessage(message,LaunchKey::Play)){
-		
-		MidiMessage playMessage{};
-		playMessage.channel = MidiChannel::CH1;
-		playMessage.status = MidiStatus::START; 
-		playMessage.data2    = 0;
-		playMessage.data1    = 0x01;
-		out->SendMidiMessage(playMessage);
-		
-		MidiMessage messagePlay = LaunchKey::Play;
-		messagePlay.channel = MidiChannel::CH2;
-		messagePlay.data2 = 0x01;
-		launchKey->SendMidiMessage(messagePlay);
-	}	
-	
-	if(CompareMidiMessage(message,LaunchKey::Record)){
-		record = !record;
-		sequencer->setRecord(record);
-		MidiMessage recordMessage =  LaunchKey::Record;//LaunchKey::DrumPadColor;
-		if(!record){
-			recordMessage.data2 = 0;
-		}		
-		//recordMessage.data1    = LaunchKey::Record;
-		//recordMessage.data2    = record ? 127 : 0;
-		out->SendMidiMessage(recordMessage);
-		/*
-		MidiMessage messageStop = LaunchKey::Play;
-		messageStop.channel = MidiChannel::CH1;
-		messageStop.data2 = 0x00;
-		launchKey->SendMidiMessage(messageStop);	
-		*/
-	}	
 	if(CompareMidiMessage(message,LaunchKey::ArrUp)){
 		mode = !mode;
 		state->hide();
@@ -97,6 +65,10 @@ Screen::receiveMidi(MidiMessage message){
 		}		
 		state->show();
 		return;
+	}
+	if(!mode){
+		// sends midi even if sequencer is not shown (for play/record)
+		sequencer->receiveMidi(message);
 	}
 	bool hasToChange = state->receiveMidi(message);
 	if(hasToChange){

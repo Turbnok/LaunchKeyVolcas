@@ -107,8 +107,7 @@ void Application::Init(void)
 
 void Application::loop(void)
 {
-    sequencer->update();
-    
+    sequencer->update();    
     std::optional<MidiMessage> messagePads = midiPads->GetMidiMessage();
     if (messagePads)
     {
@@ -129,7 +128,7 @@ void Application::loop(void)
                       << " data2: " << messagePads->data2.value() << std::endl;
         }
         screen.receiveMidi(*messagePads);
-        // midiOut->SendMidiMessage(*messagePads);
+        //midiOut->SendMidiMessage(*messagePads);
     }
     std::optional<MidiMessage> messageKeys = midiKeys->GetMidiMessage();
     if (messageKeys)
@@ -147,21 +146,8 @@ void Application::loop(void)
                       << " data1: " << messageKeys->data1.value()
                       << " data2: " << messageKeys->data2.value() << std::endl;
         }
-        // ignore pitch or modulation
-        if (messageKeys->status != 224 && messageKeys->status != 176)
-        {
-            if (messageKeys->status == MidiStatus::NOF)
-            {
-                MidiMessage hello = MidiMessage(Config::keyChannel, MidiStatus::NOF, messageKeys->data1.value(), 0);
-                midiOut->SendMidiMessage(hello);
-            }
-            else
-            {
-                MidiMessage hello = MidiMessage(Config::keyChannel, MidiStatus::NON, messageKeys->data1.value(), messageKeys->data2.value());
-                midiOut->SendMidiMessage(hello);
-            }
-        }
         sequencer->receiveKeys(*messageKeys);
+        
     }
 }
 
@@ -202,6 +188,7 @@ void Application::Run(void)
             colMessage.data1 = LaunchKey::DrumPads::DP13 + i;
             midiLaunch->SendMidiMessage(colMessage);
         }
+
     }
     {
         MidiMessage colMessage = LaunchKey::SessionPadColor;
@@ -216,12 +203,30 @@ void Application::Run(void)
             colMessage.data1 = LaunchKey::SessionPads::SP9 + i;
             midiLaunch->SendMidiMessage(colMessage);
         }
+
     }
+    {
+    // notes off
+    for (int i = 0; i < 10; ++i){
+        MidiMessage noteOff;// =  new MidiMessage();
+        noteOff.status = MidiStatus::CC;
+        noteOff.data1 = 117+i;
+        noteOff.data2 = 1;
+        noteOff.channel = MidiChannel::CH1;
+        midiOut->SendMidiMessage(noteOff);
+    }
+    }
+
+
+    MidiMessage recordMessage =  LaunchKey::Record;//LaunchKey::DrumPadColor;
+    recordMessage.data2 = 0;
+	midiLaunch->SendMidiMessage(recordMessage);
 
     MidiMessage message = LaunchKey::Play;
     message.channel = MidiChannel::CH2;
     message.data2 = LaunchKey::Brightness::P0;
     midiLaunch->SendMidiMessage(message);
+    
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOff);
 }
 

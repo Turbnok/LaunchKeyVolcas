@@ -143,6 +143,17 @@ void MidiOut::SendMidiMessage(MidiMessage midiMessage)
         midiOut->sendMessage(&message);
 }
 
+void MidiOut::SendNoteOff(MidiNote note, MidiChannel channel)
+{
+    if (!midiOut->isPortOpen())
+        return;
+    message.clear();
+    message.push_back(MidiStatus::NON + channel);
+    message.push_back(note);
+    message.push_back(0);
+    midiOut->sendMessage(&message);
+}
+
 double
 MidiClock::deltatime =0.0;
 MidiClock::MidiClock()
