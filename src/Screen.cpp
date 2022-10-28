@@ -1,17 +1,14 @@
 
 #include <Screen.hpp>
 #include <ScreenState.hpp>
+#include <Session.hpp>
 #include <midi.hpp>
-
 
 
 Screen::Screen()
 {
+	session = new Session;
 	
-    /*
-		MidiMessage colMessage = LaunchKey::DrumPadColor;
-		m_pState->receiveMidi(colMessage);
-    */
 }
 void 
 Screen::setMidiOut(MidiOut* midiOut){
@@ -28,8 +25,11 @@ Screen::setLaunchKey(MidiOut* midiLaunch){
 void
 Screen::setSequencer(Sequencer* pSequencer){
 	sequencer = pSequencer;
-	sequencer->init(launchKey, out, midiClock);
+	sequencer->init(launchKey, out, midiClock);	
+	session->init(launchKey, out, midiClock);	
 }
+
+
 void
 Screen::setState(ScreenState* pState)
 {	
@@ -46,12 +46,12 @@ Screen::setState(ScreenState* pState)
 
 void
 Screen::receiveMidi(MidiMessage message){
-	std::cout << "screen reveive midi" << std::endl;
+	std::cout << "screen reveive midi" <<message.status<<std::endl;
 	// global message
-	  // ignore pitch or modulation
-    if (message.status == 224 || (message.status == 176 && message.data2 == 0)) 
+	// ignore pitch or modulation
+	
+    if (message.status == 224) 
     {
-		
 		return;
 	}
 	if(CompareMidiMessage(message,LaunchKey::ArrUp)){
@@ -59,7 +59,7 @@ Screen::receiveMidi(MidiMessage message){
 		state->hide();
 		if(mode){
 			oldState = state;
-			state = sequencer;
+			state = session;
 		}else{
 			state = oldState;
 		}		

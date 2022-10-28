@@ -38,28 +38,36 @@ void Sequencer::record()
 
 void Sequencer::hide()
 {
-	std::cout << "hide sequencer" << std::endl;
-	shown = false;
+	mode = Modes::HIDDEN;
 }
 void Sequencer::show()
 {
 	std::cout << "sequencer show" << std::endl;
-	shown = true;
+	mode = Modes::SEQUENCER;
 	showPage(currentStep / 16);
 }
+void Sequencer::showMenu()
+{
 
+
+}
+void Sequencer::hideMenu()
+{
+
+}
 void Sequencer::update()
 {
 	if (playing)
 	{
+
 		std::chrono::steady_clock::time_point elapsed = std::chrono::steady_clock::now();
 		if ((std::chrono::duration_cast<std::chrono::milliseconds>(elapsed - last).count()) > interval)
 		{
-			if (shown)
+			if (mode == Modes::SEQUENCER)
 			{
 				MidiMessage colMessage = LaunchKey::DrumPadColor;
 				colMessage.data1 = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[currentStep % 16]);
-				colMessage.data2 = keysOn[currentStep] ? 29 : 0;
+				colMessage.data2 = track.sequence->keysOn[currentStep] ? 29 : 0;
 				launchKey->SendMidiMessage(colMessage);
 			}
 			currentDivision++;
@@ -68,21 +76,18 @@ void Sequencer::update()
 				currentDivision = 0;
 			}
 			currentStep = currentDivision/subdivisions;
-			if (currentStep % 16 == 0 && shown)
+			if (currentStep % 16 == 0 && (mode == Modes::SEQUENCER))
 			{
 				// change page
 				showPage(currentStep / 16);
 			}
 
 			last = elapsed;
-			for (std::vector<MidiMessage>::iterator it = msg[currentDivision].begin(); it != msg[currentDivision].end(); ++it)
+			
+			for (std::vector<MidiMessage>::iterator it = track.sequence->msg[currentDivision].begin(); it !=track.sequence->msg[currentDivision].end(); ++it)
 			{
-				if (it->status != MidiStatus::UNDEF)
-				{
-					std::cout << "channel: " << it->channel
-							  << " status: " << it->stat'us
-							  << " data1: " << it->data1.value()
-							  << " data2: " << it->data2.value() << std::endl;
+				 if (it->status != MidiStatus::UNDEF)
+				 {
 					bool keypressed = false;
 					for (long unsigned int i = 0; i < pressed.size(); i++)
 					{
@@ -95,12 +100,12 @@ void Sequencer::update()
 					// std::cout << "keypresse: "<<keypressed  << std::endl;
 					if (!keypressed)
 					{
-						it->channel = MidiChannel::CH1;
+						it->channel = Config::keyChannel;
 						out->SendMidiMessage(*it);
 					}
 				}
 			}
-			if (shown)
+			if (mode == Modes::SEQUENCER)
 			{
 				MidiMessage colMessage = LaunchKey::DrumPadColor;
 				colMessage = LaunchKey::DrumPadColor;
@@ -119,12 +124,13 @@ void Sequencer::setRecord(bool pOnOff)
 void Sequencer::showPage(int page)
 {
 	MidiMessage colMessage = LaunchKey::DrumPadColor;
-	colMessage.data2 = 0;
+
+
 	for (int i = 0; i < 16; i++)
 	{
 		LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[i]);
 		colMessage.data1 = pad;
-		colMessage.data2 = keysOn[i + (page * 16)] ? 29 : 0;
+		colMessage.data2 = track.sequence->keysOn[i + (page * 16)] ? 29 : 0;
 		launchKey->SendMidiMessage(colMessage);
 	}
 }
@@ -132,6 +138,10 @@ void Sequencer::showPage(int page)
 void Sequencer::receiveKeys(MidiMessage message)
 {
 	// ignore pitch or modulation
+	if (message.status == MidiStatus::NOF)
+	{
+		
+	}	
 	if (message.status == MidiStatus::NON)
 	{
 		if (message.data2.value() == 0)
@@ -153,13 +163,14 @@ void Sequencer::receiveKeys(MidiMessage message)
 		else
 		{
 			// shut the privous note
-			out->SendNoteOff(static_cast<MidiNote>(message.data1.value()), MidiChannel::CH1);
-			MidiMessage hello = MidiMessage(Config::keyChannel, message.status, message.data1.value(), message.data2.value());
+			out->SendNoteOff(static_cast<MidiNote>(message.data1.value()), Config::keyChannel);
+			MidiMessage hello = MidiMessage(Config::keyChannel, message.status, message.data1.value(), 127);
+			std::cout << "channel " << Config::keyChannel << std::endl;
 			out->SendMidiMessage(hello);
 			pressed.push_back(message);
 			if (recording)
 			{
-				keysOn[currentStep] = true;
+				track.sequence->keysOn[currentStep] = true;
 			}
 		}
 	}
@@ -173,8 +184,7 @@ void Sequencer::receiveKeys(MidiMessage message)
 }
 void Sequencer::addMessage(MidiMessage pMessage, int pStep)
 {
-	
-	msg[currentDivision].push_back(pMessage);
+	track.sequence->addMessage(pMessage, pStep);
 	MidiMessage msg = LaunchKey::DrumPadColor;
 	msg.data1 = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[pStep/subdivisions]);
 	msg.data2 = pMessage.data1.value();
@@ -182,8 +192,7 @@ void Sequencer::addMessage(MidiMessage pMessage, int pStep)
 }
 bool Sequencer::receiveMidi(MidiMessage message)
 {
-	std::cout << "Sequencer midi message : " << message.channel << std::endl;
-
+	std::cout << "Sequencer receive midi : " << message.data1.value() <<":"<< message.data2.value() << std::endl;
 	if (CompareMidiMessage(message, LaunchKey::Record))
 	{
 		record();
@@ -204,5 +213,18 @@ bool Sequencer::receiveMidi(MidiMessage message)
 		}
 		launchKey->SendMidiMessage(playMessage);
 	}
+	if (message.data1.value() == LaunchKey::DP16 && shift){
+		
+		track.sequence->clear();
+		pressed.clear();
+		showPage(0);
+	}
+	if (message.data1.value() == LaunchKey::ArrDown.data1.value())
+	{
+		shift = message.data2.value() != 0;
+		std::cout << "Sequencer down : " << shift << std::endl;
+
+	}
 	return false;
 }
+

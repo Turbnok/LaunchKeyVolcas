@@ -1,6 +1,7 @@
 #pragma once
 #include <ScreenState.hpp>
 #include <Sequencer.hpp>
+#include <Session.hpp>
 
 class Screen
 {
@@ -16,6 +17,7 @@ public:
     MidiOut* out;
     MidiClock* midiClock;
     Sequencer* sequencer;
+    Session* session;
         
     void setState(ScreenState* pState);
     void setMidiClock(MidiClock* midiIn);

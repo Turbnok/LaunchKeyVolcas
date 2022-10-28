@@ -17,6 +17,8 @@ void Application::bindPorts(void){
 
 }
 */
+
+ 
 void Application::InitMIDI(void)
 {
     midiOut = std::make_shared<MidiOut>();
@@ -108,6 +110,7 @@ void Application::Init(void)
 void Application::loop(void)
 {
     sequencer->update();    
+    
     std::optional<MidiMessage> messagePads = midiPads->GetMidiMessage();
     if (messagePads)
     {
@@ -130,6 +133,7 @@ void Application::loop(void)
         screen.receiveMidi(*messagePads);
         //midiOut->SendMidiMessage(*messagePads);
     }
+
     std::optional<MidiMessage> messageKeys = midiKeys->GetMidiMessage();
     if (messageKeys)
     {

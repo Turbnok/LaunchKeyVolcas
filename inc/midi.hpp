@@ -3,6 +3,13 @@
 #include <memory>
 #include <rtmidi/RtMidi.h>
 
+enum Modes
+    {
+        HIDDEN = 0,
+        SESSION,
+        SEQUENCER
+    };   
+
 enum MidiNote
 {
     C_2 = 0, Db_2, D_2, Eb_2, E_2, F_2, Gb_2, G_2, Ab_2, A_2, Bb_2, B_2,

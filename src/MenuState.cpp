@@ -30,19 +30,22 @@ MenuState::receiveMidi(MidiMessage message){
 		Config::keyChannel = MidiChannel::CH1;	
 		Config::setAsInt("KEYS_CHANNEL",static_cast<int>(Config::keyChannel));
 		Config::setAsInt("KEYS_PAD",0);
-		next =  LaunchKey::DrumPads::DP1;
-	}
-	if(message.data1.value() == LaunchKey::DrumPads::DP2){		
+		next = LaunchKey::DrumPads::DP1;
+	}else if(message.data1.value() == LaunchKey::DrumPads::DP2){		
 		Config::keyChannel = MidiChannel::CH2;
 		Config::setAsInt("KEYS_CHANNEL",static_cast<int>(Config::keyChannel));
 		Config::setAsInt("KEYS_PAD",1);
 		next =  LaunchKey::DrumPads::DP2;
+	} else{
+		return false;
 	}
 	if(message.channel == MidiChannel::CH16 && (message.status == 176 || message.status ==  144)){
 		return false;
 	}	
-	std::cout << "Menu state receive midi : " <<  message.channel <<  std::endl;
 
+
+	std::cout << "Menu state receive midi : " <<  message.channel <<  std::endl;
+	
 	MidiMessage resetMessage = LaunchKey::DrumPadColor;
 	resetMessage.data1    =  currentPad;
     resetMessage.data2    =  Volcas::NONE;

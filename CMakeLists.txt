@@ -16,7 +16,10 @@ add_executable( ${EXECUTABLE_NAME}
 ./src/ConfigInOut.cpp
 ./src/Config.cpp
 ./src/application.cpp
-./src/Sequencer.cpp
+./src/sequencer/Session.cpp
+./src/sequencer/Sequencer.cpp
+./src/sequencer/Track.cpp
+./src/sequencer/Sequence.cpp
 ./src/midi.cpp
                 ./main.cpp)
 # add_executable( ${EXECUTABLE_NAME}
