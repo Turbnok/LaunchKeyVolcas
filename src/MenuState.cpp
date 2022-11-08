@@ -5,13 +5,16 @@
 #include <midi.hpp>
 #include <Volcas.hpp>
 #include <Config.hpp>
-
-
+#include <Session.hpp>
 
 bool
 MenuState::receiveMidi(MidiMessage message){
 	std::cout << "menu state midi message : " << message.channel << std::endl;
 	if(message.data2.value() ==0) return false;
+	if(CompareMidiMessage(message,LaunchKey::ArrUp)){
+		nextState = new Session;
+		return true;
+	}
 	if(message.data1.value() == LaunchKey::DrumPads::DP9){
 		nextState = new VolcaKeys;
 		return true;

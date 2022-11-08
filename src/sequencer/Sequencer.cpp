@@ -61,7 +61,9 @@ void Sequencer::update()
 	{
 
 		std::chrono::steady_clock::time_point elapsed = std::chrono::steady_clock::now();
-		if ((std::chrono::duration_cast<std::chrono::milliseconds>(elapsed - last).count()) > interval)
+		std::chrono::milliseconds offset = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed - last);
+		int offsetInt = offset.count();
+		if ( offsetInt > interval)
 		{
 			if (mode == Modes::SEQUENCER)
 			{
@@ -81,9 +83,10 @@ void Sequencer::update()
 				// change page
 				showPage(currentStep / 16);
 			}
-
-			last = elapsed;
-			
+			//std::chrono::milliseconds correction = offset - last;
+			//std::chrono::duration_cast<std::chrono::milliseconds>(elapsed - last)
+			last = elapsed;// - correction;
+		
 			for (std::vector<MidiMessage>::iterator it = track.sequence->msg[currentDivision].begin(); it !=track.sequence->msg[currentDivision].end(); ++it)
 			{
 				 if (it->status != MidiStatus::UNDEF)

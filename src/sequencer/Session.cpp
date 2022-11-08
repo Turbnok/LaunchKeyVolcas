@@ -1,5 +1,7 @@
 #include <Session.hpp>
-
+#include <MenuState.hpp>
+#include <SequencerView.hpp>
+#include <map>
 Session::Session()
 {
 
@@ -14,10 +16,10 @@ Session::showPage(int pId){
     for (int i = 0; i < 16; i++)
 	{
         if(i!=0 && i!=8){
-		    LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[i]);
-		    colMessage.data1 = pad;
-		    colMessage.data2 = 0;
-		    launchKey->SendMidiMessage(colMessage);
+			LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[i]);
+			colMessage.data1 = pad;
+			colMessage.data2 = 0;
+			launchKey->SendMidiMessage(colMessage);
         }
 	}
 
@@ -50,8 +52,15 @@ void Session::show()
 bool Session::receiveMidi(MidiMessage message)
 {
 	std::cout << "Sequencer receive midi : " << message.data1.value() <<":"<< message.data2.value() << std::endl;
-	if(message.data1.value() == 21){
-        // knob 1
+    if(CompareMidiMessage(message,LaunchKey::ArrUp)){
+		if(currentSession!=UINT_MAX && currentTrack!=UINT_MAX){
+			nextState = new SequencerView(currentSession,currentTrack);
+		}else{
+			nextState = new MenuState;
+		}
+		return true;
+	}
+	if(message.data1.value() == LaunchKey::Knob::K1){
         unsigned int val = ((message.data2.value()) / (128/(nbDevices-1)));
         if( val != index){
             index = val;
@@ -59,6 +68,21 @@ bool Session::receiveMidi(MidiMessage message)
             showPage(index);
         }
     }
+	LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>(message.data1.value());
+	std::map<int,int>::const_iterator it = LaunchKey::PadsId.find(pad);
+	
+	if(it != LaunchKey::PadsId.end() && message.data2.value()>0){
+		//press
+		currentSession = it->second % 8;
+		currentTrack = index +  it->second/8;
+	}else if(it != LaunchKey::PadsId.end() && message.data2.value()==0){
+		//release		
+		currentTrack = UINT_MAX;
+		currentSession = UINT_MAX;
+		std::cout<<"currentTrack" << currentTrack <<std::endl;
+		std::cout<<"current Session " << currentSession <<std::endl;
+
+	}
 	return false;
 }
 

@@ -72,3 +72,9 @@ ScreenState::getState()
 {
   return nextState;
 }
+Screens::Name
+ScreenState::getName()
+{
+  return Screens::Menu;
+}
+

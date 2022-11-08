@@ -18,10 +18,11 @@ add_executable( ${EXECUTABLE_NAME}
 ./src/application.cpp
 ./src/sequencer/Session.cpp
 ./src/sequencer/Sequencer.cpp
+./src/sequencer/SequencerView.cpp
 ./src/sequencer/Track.cpp
 ./src/sequencer/Sequence.cpp
 ./src/midi.cpp
-                ./main.cpp)
+./main.cpp)
 # add_executable( ${EXECUTABLE_NAME}
 # 				./src/test.cpp)
 

@@ -2,7 +2,7 @@
 #include <optional>
 #include <memory>
 #include <rtmidi/RtMidi.h>
-
+#include <map>
 enum Modes
     {
         HIDDEN = 0,
@@ -319,7 +319,25 @@ namespace LaunchKey
         DP15,
         DP16,
     };
-
+    const std::map<int,int> PadsId = {
+        { LaunchKey::DrumPads::DP1, 0 },
+        { LaunchKey::DrumPads::DP2, 1 },
+        { LaunchKey::DrumPads::DP3, 2 },
+        { LaunchKey::DrumPads::DP4, 3 },
+        { LaunchKey::DrumPads::DP5, 4 },
+        { LaunchKey::DrumPads::DP6, 5 },
+        { LaunchKey::DrumPads::DP7, 6 },
+        { LaunchKey::DrumPads::DP8, 7 },
+        { LaunchKey::DrumPads::DP9, 8 },
+        { LaunchKey::DrumPads::DP10, 9 },
+        { LaunchKey::DrumPads::DP11, 10 },
+        { LaunchKey::DrumPads::DP12, 11 },
+        { LaunchKey::DrumPads::DP13, 12 },
+        { LaunchKey::DrumPads::DP14, 13 },
+        { LaunchKey::DrumPads::DP15, 14 },
+        { LaunchKey::DrumPads::DP16, 15 }
+    };
+        
     enum SessionPads
     {
         SP1    =   MidiNote::C6,

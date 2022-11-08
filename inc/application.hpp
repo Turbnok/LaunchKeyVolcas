@@ -30,7 +30,7 @@ class Application
 
         bool isPlaying = true;
         void timer_start(unsigned int interval);
-        void do_something(void);
+
 
         void
         InitMIDI(void);

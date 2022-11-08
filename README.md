@@ -1,8 +1,47 @@
 # Korg Volcas Sequencer
 
 # dependencies 
-``` apt install libyaml-cpp-dev ```
+``` apt install libyaml-cpp-dev lbrtmidi```
 
+# class diagram
+
+```mermaid
+classDiagram
+class Application
+class Screen
+class Config
+<<static>> Config
+Config : +deviceList
+Config : +inPort
+Config : +outPort
+Application "1" *-- "1" Sequencer
+Application "1" *-- "1" Screen
+Screen *--> MenuScreen : sendsMidi()
+Screen *--> Sequencer : sendsMidi()
+Sequencer "16" o--> Track
+Track "16" o--> Sequence
+MenuScreen <|-- Session
+MenuScreen <|-- GlobalMenu
+MenuScreen <|-- Device
+MenuScreen <|-- ConfigInOut
+MenuScreen <|-- ConfigDevice
+Device <|-- VolcaBass
+Device <|-- VolcaKeys
+Session -- Config
+ConfigInOut -- Config
+ConfigDevice -- Config
+Application : -midiOut
+Application : -midiLaunch
+Application : -midiKey
+Device : -knobsMap
+Screen : changeScreen()
+Track : +chain
+Sequencer : +tempo
+Sequencer : +play()
+Sequencer : +stop()
+Sequence : int +bars
+Sequence : int +color
+```
 
 # Reverse enginneered MIDI implementation of Launchkey Mini MK3 by Novation
 ## Intro
@@ -160,3 +199,5 @@ Channel|Status|Data1|Data2|Info
 16|CC|105(A6)|48|Down pad with 50% brightness
 16|CC|115(G7)|64|Play button with 75% brightness
 16|CC|117(A7)|96|Record button with 100% brightness
+
+

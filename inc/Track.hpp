@@ -12,7 +12,8 @@ class Track
 			sequence = sequences.at(0);
 		};    
 		~Track(){};
-        int8_t selected = 0;		
+        int8_t selected = 0;	
+		int8_t chains[16];
 		Sequence* sequence;
         
 	protected:

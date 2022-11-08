@@ -22,7 +22,7 @@ ConfigInOut::receiveMidi(MidiMessage message){
 	int id = 0;
 	for(std::vector<int>::iterator it = portsIn.begin(); it != portsIn.end(); ++it) {
 		std::cout << *it << std::endl; 
-  		LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>( LaunchKey::PADS[7-id++]);
+  		LaunchKey::DrumPads pad = static_cast<LaunchKey::DrumPads>(LaunchKey::PADS[7-id++]);
 		if(message.data1.value() == pad ){
 			Config::setAsInt("MIDI_CLOCK_PORT",*it);
 			

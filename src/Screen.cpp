@@ -47,32 +47,28 @@ Screen::setState(ScreenState* pState)
 void
 Screen::receiveMidi(MidiMessage message){
 	std::cout << "screen reveive midi" <<message.status<<std::endl;
-	// global message
-	// ignore pitch or modulation
 	
+	// global message
+	// ignore pitch or modulation	
     if (message.status == 224) 
     {
 		return;
 	}
-	if(CompareMidiMessage(message,LaunchKey::ArrUp)){
-		mode = !mode;
-		state->hide();
-		if(mode){
-			oldState = state;
-			state = session;
-		}else{
-			state = oldState;
-		}		
-		state->show();
-		return;
-	}
-	if(!mode){
-		// sends midi even if sequencer is not shown (for play/record)
-		sequencer->receiveMidi(message);
-	}
+	sequencer->receiveMidi(message);
+	
+	
+	
 	bool hasToChange = state->receiveMidi(message);
 	if(hasToChange){
 		ScreenState* newState = state->getState();
+		if(newState->getName() == Screens::SequencerView){
+			// Session * ses = dynamic_cast<Session*>(state);
+			
+			// std::cout << ses->currentSession << std::endl;
+			// std::cout << ses->currentTrack << std::endl;
+			
+			//newState->setSequencer(sequencer);
+		}
 		newState->init(launchKey, out, midiClock);		
 		newState->gotoStep(0);
 		state = newState;

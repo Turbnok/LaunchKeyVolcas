@@ -229,12 +229,6 @@ void Application::Run(void)
     MidiMessage message = LaunchKey::Play;
     message.channel = MidiChannel::CH2;
     message.data2 = LaunchKey::Brightness::P0;
-    midiLaunch->SendMidiMessage(message);
-    
+    midiLaunch->SendMidiMessage(message);    
     midiLaunch->SendMidiMessage(LaunchKey::DAWModeOff);
-}
-
-void do_something()
-{
-    std::cout << "I am doing something" << std::endl;
 }
