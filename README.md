@@ -1,4 +1,38 @@
-# Korg Volcas Sequencer
+# Launchkey mini mk3, Korg Volcas Sequencer
+
+## Presentation
+The idea is to have a sequencer to pilot volcas (or other midi synth). I found https://github.com/giezu/LaunchkeyMiniMK3 who reverse enginneered midi message going through Launchkey mini mk3 and I try to make a sequencer out of it.
+It compiles on raspberryPI so you don't have to actually have a PC running, next to it: DAWLess
+
+I'm not a CPP developper. My code may be hazardous but it's ok for me. Feel free to comment or enhanced this program.
+
+## Montage
+```mermaid 
+graph TD
+
+    PC/RPI---|USB|LaunchKeyMini;
+    PC/RPI---|USB|UM-ONE;
+    UM-ONE-->|MIDI|MidiTHRU;
+    MidiTHRU-->|MIDI|VolcaKeys;
+    MidiTHRU-->|MIDI|VolcaBass;
+    MidiTHRU-->|MIDI|... ;   
+```
+
+
+## Compilation 
+
+In order to compile you need Rtmidi and Yaml-cpp, make and cmake of course
+
+```bash
+sudo apt install librtmidi-dev libyaml-cpp-dev
+ ```
+ then 
+ ```bash
+ mkdir build
+ cd build
+ cmake ..
+ make
+ ```
 
 # dependencies 
 ``` apt install libyaml-cpp-dev lbrtmidi```
